@@ -1,0 +1,53 @@
+; pr.mdp
+
+; md options
+integrator	= md			; leap-frog integrator
+dt		= 0.001			; time step / ps (generally 1-2 fs)
+nsteps		= 5000000		; # steps
+
+; trajectory parameters
+nstxout		= 5000			; coordinate write frequency / steps
+nstvout		= 5000			; velocity write frequency / steps
+nstenergy	= 5000			; energy write frequency / steps
+nstlog		= 5000			; log write frequency / steps
+
+; neighbor list and cut-offs
+nstlist		= 10			; neighbor list update frequency / steps
+cutoff-scheme 	= Verlet		; treatment of cut-offs
+vdwtype         = cutoff
+vdw-modifier    = force-switch
+rlist		= 1.0			; neighbor list cutoff / nm
+rvdw		= 1.0			; van deer Waals cut-off / nm
+rvdw-switch     = 0.9
+rcoulomb	= 1.0			; real-space electrostatic cut-off / nm
+DispCorr	= EnerPres		; account for cut-off vdW scheme
+
+; periodic boundary conditions
+pbc		= xyz			; 3D PBC
+
+; electrostatics
+coulombtype	= PME			; long range electrostatic treatment
+
+; bond constraints
+continuation	= yes			; continuation run?
+constraint_algorithm = lincs		; constraint algorithm 
+constraints	= h-bonds		; all bonds constrained
+
+; thermostat
+tcoupl		= nose-hoover		; thermostat type
+nh-chain-length	= 1			; nose-hoover chain length
+tc-grps		= system		; T-coupling groups (generally separately couple protein and bath)
+tau_t		= 1.0			; T-coupling time constant / ps 
+ref_t		= 100 			; target temperature / K
+
+; barostat
+pcoupl			= Parrinello-Rahman				; barostat type
+pcoupltype    		= Anisotropic					; couple each dimension separately
+tau-p           	= 50.0						; P-coupling time constant / ps 
+compressibility		= 5.0e-7 5.0e-7 5.0e-7 5.0e-7 5.0e-7 5.0e-7	; bar^(-1)
+ref-p			= 1.0 1.0 1.0 0.0 0.0 0.0			; bar
+
+; velocity initialization
+gen_vel		= no			; randomly assign initial velocities from Maxwell-Boltzmann distribution
+gen_temp	= 298			; Maxwell-Boltzmann distribution temperature
+gen_seed	= -1			; random seed for velocity assignment
